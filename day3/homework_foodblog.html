@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Food Blog</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+    <style>
+         * {
+            font-family:Arial, Helvetica, sans-serif;
+        }
+        #leftside {
+            float:left;
+            width: 30%;
+            min-height: 1200px;
+            background-color:rgb(77, 192, 154);
+        }
+        #rightside {
+            float:left;
+            width: 70%;
+            min-height: 1200px;
+            background-color:rgb(238, 226, 192);
+            position:relative;
+        }
+        #container {
+            background-color:rgba(255, 255, 255, 0.85);
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            min-width: 1100px;
+            min-height: 1080px;
+            border-radius: 0.7em;
+        }
+        header {
+            height: 90px;
+            background-color:rgba(231, 229, 229, 0.5);
+            font-size: 2.75em;
+            padding:0.5em;
+            color:rgb(216, 150, 7);
+        }
+        header span {
+            font-family: 'Sacramento', cursive;
+        }
+        main {
+            position: relative;
+        }
+        main h2 {
+            position: absolute;
+            left: 20%;
+            top: 30px;
+            margin: 25px 0 200px 50px;
+            color:rgb(60, 190, 160);
+            text-transform: uppercase;
+        }
+        main #photos img {
+            margin: 0.75em;
+            border: 0.85em solid rgb(255, 255, 255);
+        }
+        section#blogposts {
+            position: absolute;
+            left: 20%;
+            top: 70px;
+            padding: 50px;
+        }
+        main .post {
+            margin: 25px;
+            padding: 25px;
+            border: 2px solid rgba(83, 78, 58, 0.6);
+            border-radius: 0.5em;
+        }
+        footer {
+            position: absolute;
+            bottom: -50px;
+            height: 50px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.85em;
+        }
+        /* Add a class for the profile box - not using this CSS because I replaced it with bootsrap modal */
+        /* .profile-box {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            display: none; 
+        }
+        .profile-box.active {
+            display: block; 
+        } */
+    </style>
+</head>
+<body>
+    <div id="app">
+        <aside id="leftside"></aside>
+        <aside id="rightside"></aside>
+        <div id="container">
+        <header><span>Food Blog</span></header>
+        <main>
+            <aside id="photos">
+                <img src="images/chili.jpg" alt="White Chicken Chili" width="180">
+            </aside>
+            <h2>Comments</h2>
+            <section id="blogposts">
+                <div class="post" v-for="post in posts">
+                    <!-- Add a profile image for each author -->
+                    <a href="#" @click="showProfileBox(post.author)" data-toggle="modal" data-target="#profileModal">
+                        <img v-bind:src="'profile.png'" alt="Author" width="50">
+                    </a>
+                    <span class="author">{{ post.author }}</span> —
+                    <span class="date">{{ post.date }}</span>
+                    <span class="reply">{{ post.reply }}</span>
+                    <p>{{ post.content }}</p>
+                </div>
+                <!-- Profile Box Component -->
+                <!-- <div class="profile-box" :class="{ active: showProfile }">
+                    <button @click="hideProfileBox" class="close-btn">X</button>
+                    <h3>{{ selectedAuthor }}</h3>
+                    <p>{{ getAuthorBio(selectedAuthor) }}</p>
+                </div> -->
+                <!-- Profile Box Component using Bootstrap Modal -->
+                <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="profileModalLabel">{{ selectedAuthor }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                        <p><strong>Foodie Level:</strong> {{ getFoodieLevel(selectedAuthor) }}</p>
+                        <p>{{ getAuthorBio(selectedAuthor) }}</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer>
+            &copy; Copyright FOOD BLOG
+        </footer>
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                posts: [
+                    {
+                        author: 'Brianna',
+                        date: 'February 18, 2021 @ 3:30 pm',
+                        reply: 'REPLY',
+                        content: 'Was amazing! My Walmart didn’t have coriander in stock and didn’t have ground cumin. I used serrano instead of jalapeño. It was just like my favorite tortilla soup from BJs. I am sending this recipe to my family. I want everyone to try it!',
+                    },
+                    {
+                        author: 'LINH',
+                        date: 'February 15, 2021 @ 9:46 am',
+                        reply: 'REPLY',
+                        content: 'I just made this soup today and it’s so tasty! didn’t have corn at home but still turned out very good.  It’s a winner!  I made beef chili for my parents; but since my dad has gout he can’t eat beef; this white chicken chili is perfect for him.  Thank you Lisa!',
+                    },
+                    {
+                        author: 'CATHERINE LEONARDO',
+                        date: 'February 13, 2021 @ 12:58 pm',
+                        reply: 'REPLY',
+                        content: 'I LOVE this White Chicken Chili! You are right, it is satiating meal—delicious with toasted bread. Refreshingly different taste than any chicken chili I’ve made in the past. I made it exactly as written and added some chopped zucchini, carrots, and celery. Instead of shredding the chicken, I chopped it into small pieces. It freezes very well. Will be an all-time favorite, for sure.',
+                    },
+                    {
+                        author: 'KALI',
+                        date: 'February 13, 2021 @ 11:31 am',
+                        reply: 'REPLY',
+                        content: 'This recipe is dynamite! My partner usually won’t eat beans but he finished the whole pot (darn was hoping to have some for leftovers haha). This is crowd-pleaser that I am going to add to my regular recipe rotation. Thanks so much, Lisa!',
+                    }
+                ],
+                showProfile: false,
+                selectedAuthor: '',
+                authorInfo: {
+                    Brianna: {
+                        bio: 'Food enthusiast. Love to cook and experiment. Into only organic, fat free, sugar free stuffs!',
+                        'Foodie Level': 'Novice',
+                    },
+                    LINH: {
+                        bio: 'Love food! Grew up with meat and potatoes. Recently venture outside my comfort zone. Loving everything I have been eating so far. Thai is my favorite at this time.',
+                        'Foodie Level': 'Newcomer',
+                    },
+                    'CATHERINE LEONARDO': {
+                        bio: 'I have to say I never was the adventurous type until 2 years ago. My boyfriend, who is of Japanese background, exposed me to other cultural food and I have never look back since!',
+                        'Foodie Level': 'Mentor',
+                    },
+                    KALI: {
+                        bio: 'Food is my passion. So is cooking. I love to experiment and try new things. I have to admit I\'m a food whore! Invite me over for dinner and I\'ll be there!',
+                        'Foodie Level': 'Novice',
+                    },
+                },
+            },
+            methods: {
+                showProfileBox(author) {
+                    this.selectedAuthor = author; // Set the selectedAuthor to the author clicked
+                    this.showProfile = true; // Show the profile box
+                },
+                hideProfileBox() {
+                    this.showProfile = false;
+                },
+                getFoodieLevel(author) {
+                if (this.authorInfo.hasOwnProperty(author)) {
+                    return this.authorInfo[author]['Foodie Level'];
+                } else {
+                    return '';
+                }
+                },
+                getAuthorBio(author) {
+                    if (this.authorInfo.hasOwnProperty(author)) {
+                        return this.authorInfo[author].bio;
+                    } else {
+                        return '';
+                    }
+                },
+            },
+        });
+    </script>
+</body>
+</html>
